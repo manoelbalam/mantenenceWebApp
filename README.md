@@ -23,3 +23,5 @@ $ php spark migrate
 
 # run seeder
 $ php spark db:seed UserSeeder
+
+# video 13:10
