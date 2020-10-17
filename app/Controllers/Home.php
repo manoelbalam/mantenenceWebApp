@@ -1,5 +1,5 @@
 <?php namespace App\Controllers;
-
+use App\Models\MaintenanceModel;
 class Home extends BaseController
 {
 	public function index()
@@ -12,15 +12,21 @@ class Home extends BaseController
         if(!empty($session->get('logged_in')))
         {
                 // $session = session();
-                return view('home', ['session' => $session]);
+                $this->MaintenanceModel = new MaintenanceModel();
+                $data['maintenances'] = $this->MaintenanceModel->get_all_maintenances();
+                // return view('maintenancesView', $data);
+                // return json_encode($data);
+                
+                return view('home', ['session' => $session, 'data' => $data]);
 
-        }else{
+        }
+        // else{
 
                 // $this->session->set_userdata(array('msg'=>'')); 
                 //load the login page
                 // return $this->load->view('auth/login');
                 return view('auth/login');    
-        }  
+        // } 
 
 
     //     return view('home', ['session' => $session]);

@@ -15,6 +15,15 @@ class Maintenance extends Controller {
         return view('maintenancesView', $data);
     }
 
+    public function maintenance_all() {
+        helper(['form', 'url']);
+        $this->MaintenanceModel = new MaintenanceModel();
+        // $data['maintenances'] = $this->MaintenanceModel->get_all_maintenances();
+        // return view('maintenancesView', $data);
+        header('Content-Type: application/json');
+        return json_encode($this->MaintenanceModel->get_all_maintenances());
+    }
+
     public function getmaintenance($id) {
         $this->MaintenanceModel = new MaintenanceModel();
         $data = $this->MaintenanceModel->get_by_id($id);

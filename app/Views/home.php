@@ -30,6 +30,8 @@
 
 	<script type="text/javascript">
 
+		
+
 		var cities = [
 			{id:1, value:"Berlin"}, {id:2, value:"Kiev"}, {id:3, value:"Minsk"},
 			{id:4, value:"Moscow"}, {id:5, value:"Prague"}, {id:6, value:"Riga"},
@@ -90,102 +92,35 @@
 			width: 400,
 
 			multi:false, rows:[
-				{header:"Book a Flight", body:{
+				{header:"Registrar Mantenimiento", body:{
 					rows:[
 						{
 							view:"form", elements:[
-								{view:"radio", labelWidth: 120, id:"radio1", value:1, options:[{id:1, value:"One-Way"}, {id:2, value:"Return"}], label:"Trip"},
-								{view:"combo", labelWidth: 120, label:"From", suggest:"cities", placeholder:"Select departure point"},
-								{view:"combo", labelWidth: 120, label:"To",  suggest:"cities", placeholder:"Select destination"},
-								{view:"datepicker", labelWidth: 120, label:"Departure Date", value:new Date(2024,6,12), format:"%d  %M %Y"},
-								{view:"datepicker", labelWidth: 120, id:"datepicker2", label:"Return Date", value:new Date(2024,6,12), format:"%d  %M %Y", hidden:true},
-								{view:"checkbox", labelWidth: 120, id:"flexible", value:0, label: "Flexible dates"},
-								{
-									cols:[
-										{view:"label",  value: "Passengers", labelWidth: 130},
-										{view:"counter",  labelPosition: "top", label:"Adults", value:1, min:1},
-										{view:"counter",  labelPosition: "top", label:"Children"}
-									]
-								}
-
-
-							]
+								{view:"text", label:"First Name", placeholder:"Matthew"},
+								{view:"text",  label:"Last Name", placeholder:"Clark"},
+								{view:"text",  label:"Email", placeholder:"mattclark@some.com"},
+								{view:"text",  label:"Login", placeholder:"Matt"},
+								{view:"text",  label:"Password", type:"password", placeholder:"********"},
+								{view:"text",  label:"Confirm Password", type:"password", placeholder:"********"}
+							],
+							elementsConfig:{labelAlign:"left",labelWidth:140 }
 						},
 						{
 							padding: 20,
 							css: "blue_row",
 							rows:[
 
-								{view:"button", css:"webix_primary", value:"Book Now", align: "center", css: "blue_row", height: 50}
+								{view:"button", css:"webix_primary", value:"Registrar", align: "center", css: "blue_row", height: 50},
+								{css: "blue_row"}
 							]
 						}
-
 					]
 					,
 					elementsConfig:{
 						labelWidth:100, labelAlign:"left"
 					}
 				}},
-				{header:"Hotels", collapsed:true, body:{
-					rows:[
-						{view:"form", elements:[
-
-								{view:"text", label:"Where", labelPosition: "top", placeholder:"Destination e.g. city, hotel name"},
-								{
-									cols:[
-										{view:"datepicker", label: "Check In", labelPosition:"top", value:new Date(2024,6,12), format:"%d  %M %Y"},
-										{view:"datepicker", label: "Check Out", labelPosition:"top", value:new Date(2024,6,13), format:"%d  %M %Y"}
-									]
-								}
-							],
-							elementsConfig:{labelAlign:"left" }
-						},
-						{
-							padding: 20,
-							rows:[
-								{view:"button", css:"webix_primary", value:"Search", align: "center", height: 50}
-							]
-						}
-					]
-
-				}},
-				{header:"Cars", collapsed:true, body:{
-					rows:[
-						{   view:"form",
-							elements:[
-								{view:"text", label:"Where", labelPosition: "top", placeholder:"Location e.g. country, city"},
-								{
-									cols:[
-										{view:"datepicker", label: "I'm picking up the car on", labelPosition:"top", value:new Date(2024,6,12), format:"%d  %M %Y"},
-										{width: 20},
-										{view:"richselect", label: "&nbsp;", labelPosition:"top",value:"09", options: hours, width: 75},
-										{view:"richselect", label: "&nbsp;", labelPosition:"top",value:"00", options: minutes, width: 75}
-									]
-								},
-								{
-									cols:[
-										{view:"datepicker", label: "I'm returning the car on", labelPosition:"top", value:new Date(2024,6,12), format:"%d  %M %Y"},
-										{width: 20},
-										{view:"richselect", label: "&nbsp;", labelPosition:"top",value:"09", options: hours, width: 75},
-										{view:"richselect", label: "&nbsp;", labelPosition:"top",value:"00", options: minutes, width: 75}
-									]
-								}
-							],
-							elementsConfig:{labelAlign:"left" }
-						},
-						{
-							padding: 20,
-							css: "blue_row",
-							rows:[
-
-								{view:"button", css:"webix_primary", value:"Search", align: "center", css: "blue_row", height: 50},
-								{css: "blue_row"}
-							]
-						}
-					]
-
-				}},
-				{header:"Register", css:"registration", collapsed:true, body:{
+				{header:"Usuarios", collapsed:true, body:{
 					rows:[
 						{
 							view:"form", elements:[
@@ -213,108 +148,82 @@
 			]
 		};
 
+		// var man = webix.ajax().get('maintenance/maintenance_all');
+		// console.log(man);
+
+		// webix.ajax('maintenance/maintenance_all').then(function(data){
+		// 	//response text
+		// 	console.log(data.text());
+		// });
+			
+		// var promise = webix.ajax().get('maintenance/maintenance_all');
+
+
+		var xhrMain = webix.ajax().sync().get('maintenance/maintenance_all');
+		var	maintenances = xhrMain.response.slice(0, -258);
+
+		var xhrUser = webix.ajax().sync().get('user/user_all');
+		var	users = xhrUser.response.slice(0, -258);
+
+			// console.log(users);
+		// view.parse(xhr.responseText);
+
+		function edit_maintenance($id) {
+			alert($id);
+			}
 		var special_offers = {
 
 			gravity:3,
 			type: "clean",
 			rows:[
-				{view: "tabbar", multiview: true, selected: "sOffers", options:[
-					{id: "sOffers", value: "Special offers", width: 150},
-					{id: "regular", value: "Regular", width: 150},
-					{id: "flightInfo", value: "Flight Info", width: 150}
+				{view: "tabbar", multiview: true, selected: "maintenances", options:[
+					{id: "maintenances", value: "Mantenimientos", width: 150},
+					{id: "users", value: "Usuarios", width: 150}
+					// ,
+					// {id: "flightInfo", value: "Flight Info", width: 150}
 				]},
 				{
 					view: "multiview",
 					cells:[
 						{
-							id: "sOffers",
+							id: "maintenances",
 							view: "datatable", select:true,
 							columns:[
 								{id:"id", header:"#", width:40},
-								{id:"direction", header:"Direction", fillspace:true},
-								{id:"date", header:"Date", width:150, sort:"date", format:webix.i18n.longDateFormatStr},
-								{id:"price", header:"Price", width:95, sort:"int", format:webix.i18n.priceFormat},
-								{id:"save", header:"You save", width:95, sort:"int", format:webix.i18n.priceFormat},
-								{id:"places", header:"Tickets", width:65, sort:"int"},
-								{id:"book", header:"Booking", css:"webix_el_button", width:100, template:"<a href='javascript:void(0)' class='check_flight'>Book now</a>"}
+								{id:"folio", header:"Folio", width:100},
+								{id:"client", header:"Cliente", fillspace:true},
+								{id:"model", header:"Modelo", width:95},
+								{id:"checkin", header:"Check In", width:95},
+								{id:"priority", header:"Prioridad", width:65},
+								{id:"action", header:"Acciones", css:"webix_el_button", width:100, template:"<button onclick='edit_maintenance(#id#)'>Editar</button> <a href='javascript:void(0)' class='delete_maintenance'>Eliminar</a>"}
+								// {id:"book2", header:"Booking", css:"webix_el_button", width:100, template:"<a href='javascript:void(0)' class='check_flight'>Book now</a>"}
 							],
-							data:offers,
+							data:maintenances,
 							onClick:{
-								"check_flight":function(){
+								"edit_maintenance":function($id){
+									console.log($id);
+									return false;
+								},
+								"delete_maintenance":function(){
+									console.log('delete_maintenance');
 									return false;
 								}
 							}
 						},
 						{
-							id: "regular",
+							id: "users",
 							view: "list",
 							select:true,
-							template: "#id#. #direction#",
-							data:offers,
+							template: "#id#. #first_name# #last_name# - #username#",
+							data:users,
+
+
+
 							onClick:{
 								"check_flight":function(){
 									return false;
 								}
 							}
-						},
-						{
-							id: "flightInfo",
-							rows:[
-								{
-									view: "form",
-									cols:[
-										{
-											css:"webix_primary",
-											borderless: true,
-											width: 550,
-											rows:[
-												{
-													cols:[
-														{ view:"text", labelPosition: "top", label: "Flight number", placeholder: "Enter flight No."},
-														{width: 40},
-														{}
-													]
-												},
-												{
-													view: "label",
-													label: "-- or --",
-													align: "left"
-												},
-												{
-
-													cols:[
-														{view:"combo", labelPosition: "top", label:"From", suggest:"cities", placeholder:"Select departure point"},
-														{width: 40},
-														{view:"combo", labelPosition: "top", label:"To",  suggest:"cities", placeholder:"Select destination"}
-													]
-												},
-												{ margin:20, cols:[
-													{width: 100, view:"button", css:"webix_primary", value:"Search"},
-													{},
-													{width: 100, view:"button", value:"Clear", align: "left"}
-													
-												]}
-												
-											]
-										},
-										{}
-
-									]
-								},
-								{
-
-									view: "datatable", select:true,
-									columns:[
-										{id:"from", header:"From", width:150, sort:"string"},
-										{id:"to", header:"To", width:150, sort:"string"},
-										{id:"depart", header:"Depart", width:110, sort:"int"},
-										{id:"arrive", header:"Arrive", width:110, sort:"int"},
-										{id:"status", header:"Status", fillspace: true, sort:"string"}
-									],
-									data:info
-								}
-							]
-
 						}
 					]
 				}
@@ -350,7 +259,7 @@
 				data: cities
 			}
 		};
-
+		
 		var ui = {
 			view: "scrollview",
 			body:{

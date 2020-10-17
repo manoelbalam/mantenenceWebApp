@@ -37,11 +37,13 @@ $routes->get('/', 'Home::index');
 
 // $routes->match(['get', 'post', 'put'], 'maintenance', 'Maintenance::maintenance');
 $routes->get('maintenance', 'Maintenance::index');
+$routes->get('maintenance/maintenance_all', 'Maintenance::maintenance_all');
 $routes->post('maintenance/maintenance_add', 'Maintenance::maintenance_add');
 $routes->post('maintenance/maintenance_update', 'Maintenance::maintenance_update');
 $routes->post('maintenance/maintenance_delete/(:num)', 'Maintenance::maintenance_delete/$1');
 $routes->get('maintenance/getmaintenance/(:num)', 'Maintenance::getmaintenance/$1');
 
+$routes->get('user/user_all', 'User::user_all');
 
 /**
  * --------------------------------------------------------------------
