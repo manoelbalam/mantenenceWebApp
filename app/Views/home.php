@@ -138,7 +138,7 @@
 							css: "blue_row",
 							rows:[
 
-								{view:"button", css:"webix_primary", value:"Register", align: "center", css: "blue_row", height: 50},
+								{view:"button", value:"Register", align: "center", css: "blue_row", height: 50},
 								{css: "blue_row"}
 							]
 						}
@@ -171,6 +171,14 @@
 		function edit_maintenance($id) {
 			alert($id);
 			}
+
+		function edit_maintenance($id) {
+			alert($id);
+			}
+
+		function delete_maintenance($id) {
+			alert($id);
+			}
 		var special_offers = {
 
 			gravity:3,
@@ -194,21 +202,53 @@
 								{id:"client", header:"Cliente", fillspace:true},
 								{id:"model", header:"Modelo", width:95},
 								{id:"checkin", header:"Check In", width:95},
-								{id:"priority", header:"Prioridad", width:65},
-								{id:"action", header:"Acciones", css:"webix_el_button", width:100, template:"<button onclick='edit_maintenance(#id#)'>Editar</button> <a href='javascript:void(0)' class='delete_maintenance'>Eliminar</a>"}
+								// {id:"priority", header:"Prioridad", width:95, template:"#priority#<i class='mdi mdi-star'></i>"},
+								{id:"priority", header:"Prioridad", width:85, template:function(obj){
+									console.log(obj.priority);
+									if (obj.priority === "0"){
+										return "<i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+									}
+									if (obj.priority === "1"){
+										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+									}
+									
+									if (obj.priority === "2"){
+										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+									}
+									
+									if (obj.priority === "3"){
+										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+									}
+									
+									if (obj.priority === "4"){
+										return "<i class='mdi mdi-star' style='color:yellow'></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i></i><i class='mdi mdi-star'></i>";
+									}
+									
+									if (obj.priority === "5"){
+										return "<i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'>";
+									}
+
+
+									// obj.priority.forEach(function(p) {
+									// 	console.log("priority: " + p);
+									// });
+									// obj.priority.forEach(element => console.log(element));
+									// return "<i class='mdi mdi-star'></i> <i class='mdi mdi-star' style='color:yellow' ></i>";
+								}},
+								{id:"action", header:"Acciones", width:100, template:"<button onclick='edit_maintenance(#id#)'><i class='mdi mdi-pencil'></i></button> <button onclick='delete_maintenance(#id#)'><i class='mdi mdi-delete-variant'></i></button>"}
 								// {id:"book2", header:"Booking", css:"webix_el_button", width:100, template:"<a href='javascript:void(0)' class='check_flight'>Book now</a>"}
 							],
 							data:maintenances,
-							onClick:{
-								"edit_maintenance":function($id){
-									console.log($id);
-									return false;
-								},
-								"delete_maintenance":function(){
-									console.log('delete_maintenance');
-									return false;
-								}
-							}
+							// onClick:{
+							// 	"edit_maintenance":function($id){
+							// 		console.log($id);
+							// 		return false;
+							// 	},
+							// 	"delete_maintenance":function($id){
+							// 		console.log($id);
+							// 		return false;
+							// 	}
+							// }
 						},
 						{
 							id: "users",

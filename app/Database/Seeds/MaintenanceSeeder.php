@@ -17,7 +17,7 @@ class MaintenanceSeeder extends \CodeIgniter\Database\Seeder
                 'priority' => $faker->randomDigitNot(5)
             ];
         }
-
+        // CAMBIAR PRIORIDAD DE 0 A 5
         $this->db->table('maintenances')->insertBatch($data);
     }
 }
