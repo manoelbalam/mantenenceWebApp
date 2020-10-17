@@ -5,8 +5,11 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\API\ResponseTrait;
 use App\Models\MaintenanceModel;
 class Maintenance extends Controller {
+
+    use ResponseTrait;
 
     public function index() {
         helper(['form', 'url']);
@@ -27,12 +30,12 @@ class Maintenance extends Controller {
     public function getmaintenance($id) {
         $this->MaintenanceModel = new MaintenanceModel();
         $data = $this->MaintenanceModel->get_by_id($id);
-        echo json_encode($data);
-        
+        return $this->respond($data, 200);
+
     }
 
     public function maintenance_add() {
-        // echo 'maintenance_add';die;
+        // echo json_encode(array("return" => $this->request->getPost('priority')));die;
         helper(['form', 'url']);
         $this->MaintenanceModel = new MaintenanceModel();
         $data = array(
@@ -43,12 +46,12 @@ class Maintenance extends Controller {
             'priority' => $this->request->getPost('priority'),
         );
         $insert = $this->MaintenanceModel->maintenance_add($data);
-        return json_encode(array("status" => TRUE));
+        return $this->respond(array("status" => TRUE, "message" => 'Mantenimiento Creado con Exito'), 200);
         
     }
 
     public function maintenance_update() {
-        // echo 'maintenance_add';die;
+        // echo 'maintenance_update';die;
         helper(['form', 'url']);
         $this->MaintenanceModel = new MaintenanceModel();
         // var_dump($this->request->getPost('id'));die;
@@ -60,22 +63,47 @@ class Maintenance extends Controller {
             'priority' => $this->request->getPost('priority'),
         );
         $this->MaintenanceModel->maintenance_update(array('id' => $this->request->getPost('id')), $data);
-        return json_encode(array("status" => TRUE));
+        return $this->respond(array("status" => TRUE, "message" => 'Mantenimiento Actualilzado con Exito'), 200);
+        
         
     }
 
 
     public function maintenance_delete($id) {
-        // echo 'maintenance';die;
+        // echo "maintenance_delete $id";die;
         helper(['form', 'url']);
         $this->MaintenanceModel = new MaintenanceModel();
         $this->MaintenanceModel->delete_by_id($id);
-        echo json_encode(array("status" => TRUE));
+        return $this->respond(array("status" => TRUE, "message" => 'Mantenimiento Eliminado'), 200);
+        // echo json_encode(array("status" => TRUE));
     }
 
 
 
-
+    // // Generic response method
+    // respond($data, 200);
+    // // Generic failure response
+    // fail($errors, 400);
+    // // Item created response
+    // respondCreated($data);
+    // // Item successfully deleted
+    // respondDeleted($data);
+    // // Command executed by no response required
+    // respondNoContent($message);
+    // // Client isn't authorized
+    // failUnauthorized($description);
+    // // Forbidden action
+    // failForbidden($description);
+    // // Resource Not Found
+    // failNotFound($description);
+    // // Data did not validate
+    // failValidationError($description);
+    // // Resource already exists
+    // failResourceExists($description);
+    // // Resource previously deleted
+    // failResourceGone($description);
+    // // Client made too many requests
+    // failTooManyRequests($description);
 
 
     // public function maintenance() {

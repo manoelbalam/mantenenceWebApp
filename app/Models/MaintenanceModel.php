@@ -24,7 +24,7 @@ class MaintenanceModel extends \CodeIgniter\Model
     }
 
     public function get_all_maintenances() {
-        $query = $this->db->query('select * from maintenances');
+        $query = $this->db->query('SELECT * FROM maintenances ORDER BY id DESC');
         return $query->getResult();
     }
 

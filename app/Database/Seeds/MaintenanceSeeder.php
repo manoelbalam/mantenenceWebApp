@@ -14,7 +14,7 @@ class MaintenanceSeeder extends \CodeIgniter\Database\Seeder
                 'client' => $faker->name,
                 'model' => $faker->stateAbbr,
                 'checkin' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'priority' => $faker->randomDigitNot(5)
+                'priority' => $faker->numberBetween($min = 0, $max = 5)
             ];
         }
         // CAMBIAR PRIORIDAD DE 0 A 5

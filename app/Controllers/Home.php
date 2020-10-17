@@ -12,12 +12,12 @@ class Home extends BaseController
         if(!empty($session->get('logged_in')))
         {
                 // $session = session();
-                $this->MaintenanceModel = new MaintenanceModel();
-                $data['maintenances'] = $this->MaintenanceModel->get_all_maintenances();
+                // $this->MaintenanceModel = new MaintenanceModel();
+                // $data['maintenances'] = $this->MaintenanceModel->get_all_maintenances();
                 // return view('maintenancesView', $data);
                 // return json_encode($data);
                 
-                return view('home', ['session' => $session, 'data' => $data]);
+                return view('home', ['session' => $session]);
 
         }
         // else{
