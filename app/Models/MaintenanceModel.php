@@ -4,27 +4,24 @@ namespace App\Models;
 
 class MaintenanceModel extends \CodeIgniter\Model
 {
-    protected $table = 'maintenances';
     protected $primaryKey = 'id';
-
+    protected $table = 'maintenances';
     protected $allowedFields = ['folio', 'client', 'model', 'checkin', 'prority'];
 
     public function __construct() {
         parent::__construct();
-        //$this->load->database();
         $db = \Config\Database::connect();
         $builder = $db->table('maintenances');
     }
 
     public function get_by_id($id) {
-      $sql = 'select * from maintenances where id ='.$id ;
+      $sql = "SELECT * FROM $this->table WHERE id = $id" ;
       $query =  $this->db->query($sql);
-
       return $query->getRow();
     }
 
     public function get_all_maintenances() {
-        $query = $this->db->query('SELECT * FROM maintenances ORDER BY id DESC');
+        $query = $this->db->query("SELECT * FROM $this->table ORDER BY id DESC");
         return $query->getResult();
     }
 

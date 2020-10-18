@@ -30,12 +30,12 @@ class CreateMaintenancesTable extends Migration
             ],
             'checkin' => [
                 'type' => 'VARCHAR',
-                'constraint' => 60,
+                'constraint' => 10,
                 'null' => true
             ],
             'priority' => [
                 'type' => 'INT',
-                'constraint' => 5,
+                'constraint' => 1,
                 'null' => true
             ]
         ]);

@@ -28,73 +28,70 @@
     </head>
     <body>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
+		var maintenances = webix.ajax().sync().get('maintenance/maintenance_all').response;
+		var users = webix.ajax().sync().get('user/user_all').response;
 
-		
-
-		var cities = [
-			{id:1, value:"Berlin"}, {id:2, value:"Kiev"}, {id:3, value:"Minsk"},
-			{id:4, value:"Moscow"}, {id:5, value:"Prague"}, {id:6, value:"Riga"},
-			{id:7, value:"St.Petersburg"}, {id:8, value:"Tallin"}, {id:9, value:"Vilnius"},{id:10, value:"Warsaw"}
-		];
-		var hours = [];
-		for(var i=0; i< 24;i++){
-			hours.push(i<10?("0"+i):""+i);
-		}
-		var minutes = [];
-		for(var i=0; i< 60;i += 15){
-			minutes.push(i<10?("0"+i):""+i);
-		}
-
-
-		var xhrMain = webix.ajax().sync().get('maintenance/maintenance_all');
-		var	maintenances = xhrMain.response;
-
-		var xhrUser = webix.ajax().sync().get('user/user_all');
-		var	users = xhrUser.response;
-
-			// console.log(users);
-		// view.parse(xhr.responseText);
-		function insertMaintenance(id){
-			// webix.message("insertMaintenance" + id);
-			// var form = $$("$MaintenanceForm");
-			// if (form.validate())
-			// 	webix.message("All is correct");
-			// else
-			// 	webix.message({ type:"error", text:"Form data is invalid" });
-					// $$("$MaintenanceForm").validate();
-			// your code here
-			// "Click on button btn1"
-			var maintenance = $$("MaintenanceForm").getValues();
-			// JSON.stringify(obj)
-			// console.log(maintenance.id);
-			if (maintenance.id === "") {
-				// console.log('create');
-				var uri = 'maintenance/maintenance_add';
-				//...
+		function renderStars(val) {
+			var yellow = parseInt(val);
+			switch (yellow) {
+				case 0:
+					return "<i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+					break;
+				case 1:
+					return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+					break;
+				case 2:
+					return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+					break;
+				case 3:
+					return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
+					break;
+				case 4:
+					return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i>";
+					break;
+				case 5:
+					return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i>";
+					break;
+				default:
+					return "Value Not Found!";
 			}
+		}
 
+		function insertUser(id){
+			var user = $$("UserForm").getValues();
+			webix.ajax().post('user/user_add', user).then(function(data){
+				var res = JSON.parse(data.text());
+				webix.message({ type:"Aviso", text:res.message });
+				$$('UserForm').clear();
+				$$("usersTable").clearAll();
+				$$("usersTable").load(function(){
+					return webix.ajax().sync().get('user/user_all').response;
+				});
+				
+			});
+		}
+		
+		function insertMaintenance(id){
+			var maintenance = $$("MaintenanceForm").getValues();
+			if (maintenance.id === "") {
+				var uri = 'maintenance/maintenance_add';
+			}
 			if (maintenance.id !== "") {
-				// console.log('update');
 				var uri = 'maintenance/maintenance_update';
-				//...
 			}
 
 			webix.ajax().post(uri, maintenance).then(function(data){
-			// 	//response text
-				// var res =data.text());
 				var res = JSON.parse(data.text());
-				
 				webix.message({ type:"Aviso", text:res.message });
-				// $$("$maintenanceTable").refresh();
-
+				$$('MaintenanceForm').clear();
+				reloadMaintenancesTable();
 			});
 			
 		}
 		
 		function edit_maintenance($id) {
-			var xhrMain2 = webix.ajax().sync().get('maintenance/getmaintenance/' + $id);
-		    var maintenance = JSON.parse(xhrMain2.responseText);
+			var maintenance = JSON.parse(webix.ajax().sync().get('maintenance/maintenance_get/' + $id).responseText);
 			$$("MaintenanceForm").setValues({
 				id: maintenance.id, 
 				folio: maintenance.folio,
@@ -112,11 +109,17 @@
 				type:"confirm-error"
 			})
 			.then(function(result){
-				var xhrDelMani = webix.ajax().sync().get('maintenance/maintenance_delete/'+id);
-				var delMani = JSON.parse(xhrDelMani.responseText)
+				var delMani = JSON.parse(webix.ajax().sync().get('maintenance/maintenance_delete/'+id).responseText);
 				webix.message({ type:"Aviso", text:delMani.message });
-				
+				reloadMaintenancesTable();
 			})
+		}
+
+		function reloadMaintenancesTable(){
+			$$("maintenancesTable").clearAll();
+			$$("maintenancesTable").load(function(){
+				return webix.ajax().sync().get('maintenance/maintenance_all').response;
+			});
 		}
 
 		function clearMaintenance(id) {
@@ -130,43 +133,35 @@
 			})
 		}
 
-		var flight_selector = {
+		var form_board = {
 			width: 400,
-
 			multi:false, rows:[
-				{header:"Registrar Mantenimiento", body:{
+				{header:"Mantenimiento", body:{
 					rows:[
 						{
-
-
-
 							view:"form", id:"MaintenanceForm", 
 							elementsConfig:{labelAlign:"left",labelWidth:140 },
 							elements:[
-								{view:"text", name:"id", type:"text"},
+								{view:"text", name:"id", hidden:true},
 								{view:"text", name:"folio", label:"Folio", placeholder:"###", invalidMessage: "Username can not be empty" },
 								{view:"text", name:"client", label:"Cliente", placeholder:"Nombre"},
 								{view:"text", name:"model", label:"Modelo", placeholder:"Modelo"},
-								{view:"text", name:"checkin", label:"Check In", placeholder:"Fecha"},
+								{view:"datepicker", name:"checkin", label:"Check In", value:new Date(), format:"%d  %M %Y"},
 								{view:"text", name:"priority", label:"Prioridad", type:"number", placeholder:"#"},
 							],
-							
 							rules:{
 								"folio":webix.rules.isNotEmpty
 							}
-
 						},
 						{
 							padding: 20,
 							css: "blue_row",
 							rows:[
-
-								// {view:"button", css:"webix_primary", value:"Registrar", align: "center", css: "blue_row", height: 50, click:insert_maintenance},
 								{ margin:5, cols:[
 									{ view:"button", value:"Limpiar" , click:clearMaintenance},
 									{ view:"button", value:"Guardar" , click:insertMaintenance, css:"webix_primary"}
-								]},
-								{css: "blue_row"}
+								]}
+								
 							]
 						}
 					]
@@ -175,16 +170,15 @@
 						labelWidth:100, labelAlign:"left"
 					}
 				}},
-				{header:"Usuarios", collapsed:true, body:{
+				{header:"Usuario", collapsed:true, body:{
 					rows:[
 						{
-							view:"form", elements:[
-								{view:"text", label:"First Name", placeholder:"Matthew"},
-								{view:"text",  label:"Last Name", placeholder:"Clark"},
-								{view:"text",  label:"Email", placeholder:"mattclark@some.com"},
-								{view:"text",  label:"Login", placeholder:"Matt"},
-								{view:"text",  label:"Password", type:"password", placeholder:"********"},
-								{view:"text",  label:"Confirm Password", type:"password", placeholder:"********"}
+							view:"form", id:"UserForm", elements:[
+								{view:"text", name:"first_name", label:"Nombre", placeholder:"Nombre"},
+								{view:"text", name:"last_name",  label:"Apellido", placeholder:"Apellido"},
+								{view:"text", name:"username",  label:"Usuario", placeholder:"Usuario"},
+								{view:"text", name:"email",  label:"Email", placeholder:"email@email.com"},
+								{view:"text", name:"password",  label:"Password", type:"password", placeholder:"******"}
 							],
 							elementsConfig:{labelAlign:"left",labelWidth:140 }
 						},
@@ -193,7 +187,7 @@
 							css: "blue_row",
 							rows:[
 
-								{view:"button", value:"Register", align: "center", css: "blue_row", height: 50},
+								{view:"button", value:"Guardar", click:insertUser, align: "center", css: "blue_row", height: 50},
 								{css: "blue_row"}
 							]
 						}
@@ -203,28 +197,14 @@
 			]
 		};
 
-		// var man = webix.ajax().get('maintenance/maintenance_all');
-		// console.log(man);
-
-		// webix.ajax('maintenance/maintenance_all').then(function(data){
-		// 	//response text
-		// 	console.log(data.text());
-		// });
-			
-		// var promise = webix.ajax().get('maintenance/maintenance_all');
-
-
-		
-		var special_offers = {
+		var main_board = {
 
 			gravity:3,
 			type: "clean",
 			rows:[
 				{view: "tabbar", multiview: true, selected: "maintenancesTable", options:[
 					{id: "maintenancesTable", value: "Mantenimientos", width: 150},
-					{id: "users", value: "Usuarios", width: 150}
-					// ,
-					// {id: "flightInfo", value: "Flight Info", width: 150}
+					{id: "usersTable", value: "Usuarios", width: 150}
 				]},
 				{
 					view: "multiview",
@@ -238,57 +218,19 @@
 								{id:"client", header:"Cliente", fillspace:true},
 								{id:"model", header:"Modelo", width:95},
 								{id:"checkin", header:"Check In", width:95},
-								// {id:"priority", header:"Prioridad", width:95, template:"#priority#<i class='mdi mdi-star'></i>"},
 								{id:"priority", header:"Prioridad", width:85, template:function(obj){
-									// console.log(obj.priority);
-									// Mejorar esta funcion si tenemos tiempo
-									if (obj.priority === "0"){
-										return "<i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
-									}
-									if (obj.priority === "1"){
-										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
-									}
-									
-									if (obj.priority === "2"){
-										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
-									}
-									
-									if (obj.priority === "3"){
-										return "<i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star'></i><i class='mdi mdi-star'></i>";
-									}
-									
-									if (obj.priority === "4"){
-										return "<i class='mdi mdi-star' style='color:yellow'></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i><i class='mdi mdi-star' style='color:yellow' ></i></i><i class='mdi mdi-star'></i>";
-									}
-									
-									if (obj.priority === "5"){
-										return "<i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'><i class='mdi mdi-star' style='color:yellow'>";
-									}
-
+									return renderStars(obj.priority);
 								}},
 								{id:"action", header:"Acciones", width:100, template:"<button onclick='edit_maintenance(#id#)'><i class='mdi mdi-pencil'></i></button> <button onclick='delete_maintenance(#id#)'><i class='mdi mdi-delete-variant'></i></button>"}
-								// {id:"book2", header:"Booking", css:"webix_el_button", width:100, template:"<a href='javascript:void(0)' class='check_flight'>Book now</a>"}
 							],
 							data:maintenances,
-							// onClick:{
-							// 	"edit_maintenance":function($id){
-							// 		console.log($id);
-							// 		return false;
-							// 	},
-							// 	"delete_maintenance":function($id){
-							// 		console.log($id);
-							// 		return false;
-							// 	}
-							// }
 						},
 						{
-							id: "users",
+							id: "usersTable",
 							view: "list",
 							select:true,
 							template: "#id#. #first_name# #last_name# - #username#",
 							data:users,
-
-
 
 							onClick:{
 								"check_flight":function(){
@@ -300,36 +242,6 @@
 				}
 			]
 		};
-
-		var lang_list = {
-			view:"popup", id:"lang",
-			head:false, width: 100,
-			body:{
-				view:"list", scroll:false,
-				yCount:4, select:true, borderless:true,
-				template:"#lang#",
-				data:[
-					{id:1, lang:"English"},
-					{id:2, lang:"French"},
-					{id:3, lang:"German"},
-					{id:4, lang:"Russian"}
-				],
-				on:{"onAfterSelect":function(){
-					$$("lang").hide();
-				}}
-			}
-		};
-
-		var cities_list = {
-			id: "cities",
-			view: "suggest",
-			body:{
-				view: "list",
-				yCount: 5,
-				scroll: true,
-				data: cities
-			}
-		};
 		
 		var ui = {
 			view: "scrollview",
@@ -339,29 +251,15 @@
 					{view:"toolbar",
 						elements:[
 							{view:"label",  label: "Bienvenido"},{},
-							{view:"icon", icon:"mdi mdi-help"},
-							{view:"icon", icon:"mdi mdi-comment"},
 							{view:"icon", icon:"mdi mdi-logout", on:{onItemClick: function(){ window.location = 'http://localhost:8080/auth/logout';}}}
 						]},
-					{autoheight:true, type: "wide", cols:[flight_selector, special_offers]
+					{autoheight:true, type: "wide", cols:[form_board, main_board]
 					}
 				]
 			}
 		};
-
-
 		webix.ready(function(){
-			webix.ui(cities_list);
-			webix.ui(lang_list);
 			webix.ui(ui);
-
-
-			$$("radio1").attachEvent("onChange", function(newv, oldv){
-				if(newv == 2)
-					$$("datepicker2").show();
-				else
-					$$("datepicker2").hide();
-			});
 		});
 
 	</script>

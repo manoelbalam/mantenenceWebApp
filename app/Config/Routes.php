@@ -35,15 +35,15 @@ $routes->match(['get', 'post'], '/auth/register', 'Auth::register');
 $routes->get('/auth/logout', 'Auth::logout');
 $routes->get('/', 'Home::index');
 
-// $routes->match(['get', 'post', 'put'], 'maintenance', 'Maintenance::maintenance');
+$routes->get('user/user_all', 'User::user_all');
+$routes->post('user/user_add', 'User::user_add');
+
 $routes->get('maintenance', 'Maintenance::index');
 $routes->get('maintenance/maintenance_all', 'Maintenance::maintenance_all');
 $routes->post('maintenance/maintenance_add', 'Maintenance::maintenance_add');
 $routes->post('maintenance/maintenance_update', 'Maintenance::maintenance_update');
 $routes->get('maintenance/maintenance_delete/(:num)', 'Maintenance::maintenance_delete/$1');
-$routes->get('maintenance/getmaintenance/(:num)', 'Maintenance::getmaintenance/$1');
-
-$routes->get('user/user_all', 'User::user_all');
+$routes->get('maintenance/maintenance_get/(:num)', 'Maintenance::maintenance_get/$1');
 
 /**
  * --------------------------------------------------------------------
