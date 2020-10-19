@@ -8,12 +8,6 @@
 			.transparent{
 				background-color: transparent;
 			}
-			a.check_flight{
-				color:  #367ddc;
-			}
-			.webix_row_select a.check_flight{
-				color:  #fff;
-			}
 			.blue_row{
 				background-color: #cbdeeb !important;
 			}
@@ -188,7 +182,6 @@
 							rows:[
 
 								{view:"button", value:"Guardar", click:insertUser, align: "center", css: "blue_row", height: 50},
-								{css: "blue_row"}
 							]
 						}
 					]
@@ -230,13 +223,7 @@
 							view: "list",
 							select:true,
 							template: "#id#. #first_name# #last_name# - #username#",
-							data:users,
-
-							onClick:{
-								"check_flight":function(){
-									return false;
-								}
-							}
+							data:users
 						}
 					]
 				}
@@ -250,7 +237,7 @@
 				rows:[
 					{view:"toolbar",
 						elements:[
-							{view:"label",  label: "Bienvenido"},{},
+							{view:"label",  label: "Bienvenido"},
 							{view:"icon", icon:"mdi mdi-logout", on:{onItemClick: function(){ window.location = 'http://localhost:8080/auth/logout';}}}
 						]},
 					{autoheight:true, type: "wide", cols:[form_board, main_board]
